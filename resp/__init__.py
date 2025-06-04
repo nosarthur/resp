@@ -7,7 +7,7 @@ __version__ = '0.8'
 __license__ = "BSD-3-Clause"
 __date__    = "2019-08-07"
 
-from .driver import resp
+from .driver import resp, charges_to_esp
 from . import espfit
 from .extras import test
 from .stage2_helper import set_stage2_constraint
