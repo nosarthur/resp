@@ -30,3 +30,15 @@ resp.charges_to_esp(mol, charges, options)
 print(f"Generated grid files:")
 print(f"  1_{mol.name()}_grid.dat")
 print(f"  1_{mol.name()}_grid_esp.dat")
+
+# Compare with RESP-generated ESP
+from compare_esp import compare_grid_esp
+
+print("\nComparing MPFIT-generated ESP with RESP-generated ESP...")
+resp_esp = "../resp/1_default_grid_esp.dat"
+mpfit_esp = "1_default_grid_esp.dat"
+
+try:
+    metrics = compare_grid_esp(resp_esp, mpfit_esp, verbose=True)
+except Exception as e:
+    print(f"Error during comparison: {e}")
