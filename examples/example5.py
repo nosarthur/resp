@@ -1,6 +1,7 @@
+import os
 import psi4
 import resp
-from resp.utils import compare_grid_esp, create_difference_esp, grid_to_mol2
+from resp.utils import compare_grid_esp, create_difference_esp
 
 mol = psi4.geometry(""" 
  N   6.27981210  -4.25303372   0.19313865
@@ -25,19 +26,28 @@ options = {'VDW_SCALE_FACTORS'  : [1.4, 1.6, 1.8, 2.0],
 	   'BASIS_ESP'          : 'aug-cc-pvdz', 
            }
 
+# Call for first stage fit
+charges1 = resp.resp([mol], options)
+
+print('Electrostatic Potential Charges')
+print(charges1[0])
+print('Restrained Electrostatic Potential Charges')
+print(charges1[1])
+
+os.system("mv %i_%s_grid_esp.dat %i_%s_grid_esp_ESP.dat" %(1, mol.name(), 1, mol.name()))
+
 # MPFIT-generated charges 
 charges = [-0.39242, -0.02616, 0.10538, 0.13998, 0.12150, 0.25454, 0.00422, -0.30743, 0.10040]
 
 # Generate ESP grid files from charges
 resp.charges_to_esp(mol, charges, options)
 
-print(f"Generated grid files:")
-print(f"  1_{mol.name()}_grid.dat")
+print(f"Generated grid files (for comparison charges):")
 print(f"  1_{mol.name()}_grid_esp.dat")
 
 # Compare with RESP-generated ESP
 print("\nComparing MPFIT-generated ESP with RESP-generated ESP...")
-resp_esp = "../resp/1_default_grid_esp.dat"
+resp_esp = "1_default_grid_esp_ESP.dat"
 mpfit_esp = "1_default_grid_esp.dat"
 
 metrics = compare_grid_esp(resp_esp, mpfit_esp, verbose=True)
@@ -45,4 +55,3 @@ metrics = compare_grid_esp(resp_esp, mpfit_esp, verbose=True)
 # Create difference ESP file
 print("\nCreating difference ESP file...")
 create_difference_esp(resp_esp, mpfit_esp, output_file='difference_grid_esp.dat')
-    
