@@ -3,4 +3,5 @@
 - `example2.py`: Two-stage fitting for two ethanol conformers
 - `example3.py`: Two-stage fitting for three ethanol conformers
 - `example4.py`: Two-stage fitting for four ethane-1,2-diol conformers with complex constraints
+- `example5.py`: One-stage fitting (ESP) compared to user-provided charges
 - `constraints.py`: Additional examples on how to specify intramolecular constraints
