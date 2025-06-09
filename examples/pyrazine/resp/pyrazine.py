@@ -59,8 +59,8 @@ print("\nConverting RESP ESP to MOL2 format...")
 grid_to_mol2(grid_file='1_default_grid.dat',
              esp_file='1_default_grid_esp.dat',
              output_mol2='resp_esp.mol2',
+             normalize=False)
 
 # Also create a PDB file of the molecule
 from resp.utils import molecule_to_pdb
 molecule_to_pdb(mol, filename='pyrazine.pdb', res_name='PYZ')
-             normalize=False)

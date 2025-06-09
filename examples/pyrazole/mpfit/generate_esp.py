@@ -28,6 +28,12 @@ options = {'VDW_SCALE_FACTORS'  : [1.4, 1.6, 1.8, 2.0],
 # MPFIT-generated charges 
 charges = [-0.39242, -0.02616, 0.10538, 0.13998, 0.12150, 0.25454, 0.00422, -0.30743, 0.10040]
 
+# (as a test) RESP-generated charges
+#charges = [-0.67621058, 0.09036591, 0.09036591, 0.09036591, 0.1696633, 0.29446707, -0.12723959, -0.27854833, 0.3467704]
+
+# (as a test) ESP-generated charges
+#charges = [-0.51241923, -0.01963482, 0.11270785, 0.19172582, 0.16623251, 0.29778778, -0.09928506, -0.35601807, 0.21890322]
+
 # Generate ESP grid files from charges
 resp.charges_to_esp(mol, charges, options)
 
