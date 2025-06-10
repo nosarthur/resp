@@ -1,7 +1,7 @@
 import os
 import psi4
 import resp
-from resp.utils import compare_grid_esp, create_difference_esp
+from utils import charges_to_esp, compare_grid_esp, create_difference_esp
 
 mol = psi4.geometry(""" 
  N   6.27981210  -4.25303372   0.19313865
@@ -40,7 +40,7 @@ os.system("mv %i_%s_grid_esp.dat %i_%s_grid_esp_ESP.dat" %(1, mol.name(), 1, mol
 charges = [-0.39242, -0.02616, 0.10538, 0.13998, 0.12150, 0.25454, 0.00422, -0.30743, 0.10040]
 
 # Generate ESP grid files from charges
-resp.charges_to_esp(mol, charges, options)
+charges_to_esp(mol, charges, options)
 
 print(f"Generated grid files (for comparison charges):")
 print(f"  1_{mol.name()}_grid_esp.dat")
