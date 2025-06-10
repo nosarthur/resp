@@ -226,5 +226,3 @@ def resp(molecules, options=None):
         f.write('\n')
 
     return qf
-
-
