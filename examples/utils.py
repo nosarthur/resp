@@ -1,21 +1,16 @@
 """
 Utility functions for RESP/MPFIT comparison examples.
-
-This module contains helper functions that were originally added to resp/resp
-but were moved here per maintainer feedback to keep them separate from the
-core RESP method implementation.
 """
 import numpy as np
 import os
 import sys
 
-# Add the resp module to the path so we can import needed components
+# Add the resp module
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from resp.vdw_surface import vdw_surface
 
 # Physical constants
 bohr_to_angstrom = 0.529177249
-
 
 def charges_to_esp(molecule, charges, options=None):
     """Generate ESP grid files from given charges.

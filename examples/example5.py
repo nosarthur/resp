@@ -36,7 +36,7 @@ print(charges1[1])
 
 os.system("mv %i_%s_grid_esp.dat %i_%s_grid_esp_ESP.dat" %(1, mol.name(), 1, mol.name()))
 
-# MPFIT-generated charges 
+# MPFIT-generated charges (user-defined) 
 charges = [-0.39242, -0.02616, 0.10538, 0.13998, 0.12150, 0.25454, 0.00422, -0.30743, 0.10040]
 
 # Generate ESP grid files from charges
