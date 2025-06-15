@@ -58,14 +58,11 @@ def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_gri
     coordinates = molecule.geometry()
     coordinates = coordinates.np.astype('float')*bohr_to_angstrom
     
-    # Generate grid points - same as resp()
-    points = []
-    for scale_factor in options['VDW_SCALE_FACTORS']:
-        shell, radii = vdw_surface(coordinates, symbols, scale_factor,
-                            options['VDW_POINT_DENSITY'], options['VDW_RADII'])
-        points.append(shell)
-    points = np.concatenate(points)
-    
+    # Read grid points
+    points = np.loadtxt(options['GRID'][0])
+    if 'Bohr' in str(molecule.units()):
+        points *= bohr_to_angstrom
+
     # Calculate ESP values - following same pattern as invr calculation in resp()
     esp_values = np.zeros(len(points))
     for i in range(len(points)):
