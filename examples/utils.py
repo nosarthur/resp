@@ -12,7 +12,7 @@ from resp.vdw_surface import vdw_surface
 # Physical constants
 bohr_to_angstrom = 0.529177249
 
-def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_grid_esp.dat"):
+def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_grid_esp.dat", verbose=True):
     """Generate ESP grid files from given charges.
     
     Parameters
@@ -27,33 +27,12 @@ def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_gri
     Returns
     -------
     None
-        Writes grid.dat and grid_esp.dat files
+       Prints metrics found in `compare_grid_esp` 
     """
-    if options is None:
-        options = {}
     
     # Check options - same as resp()
-    options = {k.upper(): v for k, v in sorted(options.items())}
-    
-    # VDW surface options - same defaults as resp()
-    if 'VDW_SCALE_FACTORS' not in options:
-        options['VDW_SCALE_FACTORS'] = [1.4, 1.6, 1.8, 2.0]
-    if 'VDW_POINT_DENSITY' not in options:
-        options['VDW_POINT_DENSITY'] = 1.0
-    if 'VDW_RADII' not in options:
-        options['VDW_RADII'] = {}
-    
-    # Process VDW radii dict - same as resp()
-    radii = {}
-    for i in options['VDW_RADII']:
-        radii[i.upper()] = options['VDW_RADII'][i]
-    options['VDW_RADII'] = radii
-    
-    # Get symbols - same as resp()
-    symbols = []
-    for i in range(molecule.natom()):
-        symbols.append(molecule.symbol(i))
-    
+    options = {k.upper(): v for k, v in sorted(options.items())}    
+
     # Get coordinates in angstrom - same as resp()
     coordinates = molecule.geometry()
     coordinates = coordinates.np.astype('float')*bohr_to_angstrom
@@ -72,7 +51,7 @@ def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_gri
             esp_values[i] += charges[j] / distance * bohr_to_angstrom
     
     esp_psi4 = np.loadtxt(psi4_esp_file)
-    compare_grid_esp(esp_psi4, esp_values, verbose=True) 
+    compare_grid_esp(esp_psi4, esp_values, verbose=verbose) 
     return
 
 
