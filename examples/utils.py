@@ -12,8 +12,8 @@ from resp.vdw_surface import vdw_surface
 # Physical constants
 bohr_to_angstrom = 0.529177249
 
-def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_grid_esp.dat", verbose=True):
-    """Generate ESP grid files from given charges.
+def charges_to_esp(molecule, charges, psi4_grid_file="1_default_grid.dat", psi4_esp_file="1_default_grid_esp.dat", verbose=True):
+    """Calculate ESP from charges and compare with reference ESP values.
     
     Parameters
     ----------
@@ -21,24 +21,25 @@ def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_gri
         Molecule instance with geometry
     charges : array_like
         Atomic charges to use for ESP calculation
-    options : dict, optional
-        Options for grid generation (uses same options as resp())
+    psi4_grid_file : str, optional
+        Path to grid points file (default: "1_default_grid.dat")
+    psi4_esp_file : str, optional
+        Path to reference ESP values file (default: "1_default_grid_esp.dat")
+    verbose : bool, optional
+        Print detailed comparison metrics (default: True)
     
     Returns
     -------
     None
-       Prints metrics found in `compare_grid_esp` 
+        Prints comparison metrics between calculated and reference ESP
     """
     
-    # Check options - same as resp()
-    options = {k.upper(): v for k, v in sorted(options.items())}    
-
     # Get coordinates in angstrom - same as resp()
     coordinates = molecule.geometry()
     coordinates = coordinates.np.astype('float')*bohr_to_angstrom
     
-    # Read grid points
-    points = np.loadtxt(options['GRID'][0])
+    # Read grid points from grid.dat
+    points = np.loadtxt(psi4_grid_file)
     if 'Bohr' in str(molecule.units()):
         points *= bohr_to_angstrom
 
@@ -49,28 +50,34 @@ def charges_to_esp(molecule, charges, options=None, psi4_esp_file="1_default_gri
             distance = np.linalg.norm(points[i] - coordinates[j])
             # Convert to atomic units: ESP (a.u.) = charge * (1/r_angstrom) * bohr_to_angstrom
             esp_values[i] += charges[j] / distance * bohr_to_angstrom
-    
+    # Read ESP values from grid_esp.dat
     esp_psi4 = np.loadtxt(psi4_esp_file)
     compare_grid_esp(esp_psi4, esp_values, verbose=verbose) 
     return
 
 
 def compare_grid_esp(esp1, esp2, verbose=True):
-    """Compare two grid_esp.dat files and calculate metrics.
+    """Compare two ESP arrays and calculate error metrics.
     
     Parameters
     ----------
-    file1 : str
-        Path to first grid_esp.dat file
-    file2 : str
-        Path to second grid_esp.dat file
-    verbose : bool
-        Print detailed comparison metrics
+    esp1 : array_like
+        First ESP array (reference values)
+    esp2 : array_like
+        Second ESP array (calculated values)
+    verbose : bool, optional
+        Print detailed comparison metrics (default: True)
     
     Returns
     -------
     dict
-        Dictionary containing comparison metrics
+        Dictionary containing comparison metrics:
+        - l2_norm: L2 norm of the difference
+        - rmse: Root mean square error
+        - mae: Mean absolute error
+        - max_error: Maximum absolute error
+        - correlation: Pearson correlation coefficient
+        - r_squared: R-squared value
     """
     
     # Check if arrays have same shape

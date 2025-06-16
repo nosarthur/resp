@@ -46,4 +46,4 @@ print("\nStage Two:\n")
 print('RESP Charges')
 print(charges2[1])
 
-charges_to_esp(mol, charges2[1], options, psi4_esp_file = "1_default_grid_esp.dat")
+charges_to_esp(mol, charges2[1], psi4_grid_file=options['grid'][0], psi4_esp_file=options['esp'][0])
